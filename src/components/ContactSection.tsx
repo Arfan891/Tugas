@@ -8,8 +8,6 @@ import {
   MessageSquare, 
   ExternalLink, 
   CheckCircle2, 
-  Sparkles, 
-  Send,
   Zap,
   Palette
 } from 'lucide-react';

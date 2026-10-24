@@ -5,26 +5,27 @@ import type {
   ServiceItem,
   PortfolioItem,
   QuotationRequest,
-  TestimonialItem,
-  ServiceCategory
+  TestimonialItem
 } from '../types';
 import { initialCMSData } from '../data/initialData';
 
 const STORAGE_KEY = 'nck_printing_cms_v2';
 const ADMIN_SESSION_KEY = 'nck_admin_session';
 
+// Kredensial admin dibaca dari .env.local (lihat .env.example).
+// Tanpa env, login selalu ditolak. Catatan: ini autentikasi sisi-klien saja, belum ada backend.
+const ADMIN_EMAIL = (import.meta.env.VITE_ADMIN_EMAIL || '').trim().toLowerCase();
+const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || '';
+
 interface CMSContextType {
   data: CMSState;
   isAdmin: boolean;
-  loginAdmin: (emailOrPassword: string, password?: string) => boolean;
+  loginAdmin: (email: string, password: string) => boolean;
   logoutAdmin: () => void;
-  // Modals & triggers
+  // RFQ modal
   isRfqModalOpen: boolean;
   openRfqModal: (selectedServiceId?: string) => void;
   closeRfqModal: () => void;
-  isAdminModalOpen: boolean;
-  openAdminModal: () => void;
-  closeAdminModal: () => void;
   selectedServiceForRfq: ServiceItem | null;
   // CRUD actions
   updateCompanyInfo: (info: Partial<CompanyInfo>) => void;
@@ -74,7 +75,6 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   });
 
   const [isRfqModalOpen, setIsRfqModalOpen] = useState(false);
-  const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
   const [selectedServiceForRfq, setSelectedServiceForRfq] = useState<ServiceItem | null>(null);
 
   // Sync to local storage
@@ -86,28 +86,17 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   }, [data]);
 
-  const loginAdmin = (emailOrPassword: string, optionalPassword?: string): boolean => {
-    let email = '';
-    let pass = '';
-    if (optionalPassword !== undefined) {
-      email = emailOrPassword.trim().toLowerCase();
-      pass = optionalPassword.trim();
-    } else {
-      pass = emailOrPassword.trim();
-    }
-
-    // Support required credentials:
-    // email : raudhatulihsan50@gmail.com
-    // password : @Agus123
-    const isExactEmailAndPass = (email === 'raudhatulihsan50@gmail.com' && pass === '@Agus123');
-    const isDirectPass = (pass === '@Agus123' || pass === 'admin123' || pass === 'nurrizky2026' || pass === 'admin');
-
-    if (isExactEmailAndPass || isDirectPass) {
+  const loginAdmin = (email: string, password: string): boolean => {
+    const isValid =
+      ADMIN_EMAIL !== '' &&
+      ADMIN_PASSWORD !== '' &&
+      email.trim().toLowerCase() === ADMIN_EMAIL &&
+      password === ADMIN_PASSWORD;
+    if (isValid) {
       setIsAdmin(true);
       sessionStorage.setItem(ADMIN_SESSION_KEY, 'true');
-      return true;
     }
-    return false;
+    return isValid;
   };
 
   const logoutAdmin = () => {
@@ -129,9 +118,6 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setIsRfqModalOpen(false);
     setSelectedServiceForRfq(null);
   };
-
-  const openAdminModal = () => setIsAdminModalOpen(true);
-  const closeAdminModal = () => setIsAdminModalOpen(false);
 
   // Company Info
   const updateCompanyInfo = (info: Partial<CompanyInfo>) => {
@@ -311,9 +297,6 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       isRfqModalOpen,
       openRfqModal,
       closeRfqModal,
-      isAdminModalOpen,
-      openAdminModal,
-      closeAdminModal,
       selectedServiceForRfq,
       updateCompanyInfo,
       addService,

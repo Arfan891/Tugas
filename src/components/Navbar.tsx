@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useCMS } from '../context/CMSContext';
 import { 
   Printer, 
@@ -6,19 +7,12 @@ import {
   X, 
   FileText, 
   MessageSquare, 
-  ShieldCheck, 
-  Layers, 
-  Sparkles, 
-  PhoneCall
+  ShieldCheck
 } from 'lucide-react';
 import { createWhatsAppUrl } from '../utils/formatters';
 
-interface NavbarProps {
-  onOpenAdminLogin: () => void;
-}
-
-export const Navbar: React.FC<NavbarProps> = ({ onOpenAdminLogin }) => {
-  const { data, isAdmin, openRfqModal, openAdminModal } = useCMS();
+export const Navbar: React.FC = () => {
+  const { data, isAdmin, openRfqModal } = useCMS();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLabels = data.companyInfo.navigation || {
@@ -78,25 +72,25 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAdminLogin }) => {
           <div className="hidden md:flex items-center gap-2.5">
             {/* Admin status / Login trigger */}
             {isAdmin ? (
-              <button
+              <Link
                 id="btn-admin-cms-nav"
-                onClick={openAdminModal}
+                to="/admin"
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-300 hover:bg-emerald-100 transition-colors"
                 title="Buka CMS Admin Panel"
               >
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
                 <span>Admin CMS</span>
-              </button>
+              </Link>
             ) : (
-              <button
+              <Link
                 id="btn-admin-login-nav"
-                onClick={onOpenAdminLogin}
+                to="/admin/login"
                 className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
                 title="Login Pengelola / Admin"
               >
                 <ShieldCheck className="w-3.5 h-3.5" />
                 <span className="hidden xl:inline">CMS Admin</span>
-              </button>
+              </Link>
             )}
 
             {/* Direct WhatsApp Consultation */}
@@ -183,25 +177,19 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAdminLogin }) => {
 
             <div className="pt-2 text-center">
               {isAdmin ? (
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    openAdminModal();
-                  }}
+                <Link
+                  to="/admin"
                   className="text-xs text-emerald-700 font-semibold underline"
                 >
                   Buka Admin CMS Panel
-                </button>
+                </Link>
               ) : (
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    onOpenAdminLogin();
-                  }}
+                <Link
+                  to="/admin/login"
                   className="text-xs text-slate-400 hover:text-slate-600"
                 >
                   Login Pengelola / Admin
-                </button>
+                </Link>
               )}
             </div>
           </div>

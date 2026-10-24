@@ -1,65 +1,51 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { CMSProvider, useCMS } from './context/CMSContext';
-import { PromoBanner } from './components/PromoBanner';
-import { Navbar } from './components/Navbar';
-import { Hero } from './components/Hero';
-import { ServicesSection } from './components/ServicesSection';
-import { PortfolioSection } from './components/PortfolioSection';
-import { AboutAndFacilities } from './components/AboutAndFacilities';
-import { TestimonialsSection } from './components/TestimonialsSection';
-import { ContactSection } from './components/ContactSection';
-import { Footer } from './components/Footer';
-import { FloatingWhatsApp } from './components/FloatingWhatsApp';
-import { QuotationWizardModal } from './components/QuotationWizardModal';
-import { AdminLoginModal } from './components/AdminLoginModal';
-import { AdminCMSModal } from './components/AdminCMSModal';
+import { HomePage } from './pages/HomePage';
+import { LoginPage } from './pages/LoginPage';
+import { AdminLayout } from './pages/admin/AdminLayout';
+import { DashboardPage } from './pages/admin/DashboardPage';
+import { QuotationsPage } from './pages/admin/QuotationsPage';
+import { ServicesPage } from './pages/admin/ServicesPage';
+import { PortfolioPage } from './pages/admin/PortfolioPage';
+import { TestimonialsPage } from './pages/admin/TestimonialsPage';
+import { CompanyPage } from './pages/admin/CompanyPage';
+import { BackupPage } from './pages/admin/BackupPage';
 
-const MainAppContent: React.FC = () => {
-  const [isAdminLoginOpen, setIsAdminLoginOpen] = useState(false);
-
-  return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 font-sans selection:bg-amber-400 selection:text-slate-950">
-      {/* Top Notification / Promo Announcement */}
-      <PromoBanner />
-
-      {/* Main Navigation Header */}
-      <Navbar onOpenAdminLogin={() => setIsAdminLoginOpen(true)} />
-
-      {/* Main Content Sections */}
-      <main className="flex-grow">
-        <Hero />
-        <ServicesSection />
-        <PortfolioSection />
-        <AboutAndFacilities />
-        <TestimonialsSection />
-        <ContactSection />
-      </main>
-
-      {/* Footer */}
-      <Footer onOpenAdminLogin={() => setIsAdminLoginOpen(true)} />
-
-      {/* Floating WhatsApp Consultation Widget */}
-      <FloatingWhatsApp />
-
-      {/* Request for Quotation (RFQ) Wizard Modal */}
-      <QuotationWizardModal />
-
-      {/* Admin Login Modal */}
-      <AdminLoginModal
-        isOpen={isAdminLoginOpen}
-        onClose={() => setIsAdminLoginOpen(false)}
-      />
-
-      {/* Admin Content Management System (CMS) Modal */}
-      <AdminCMSModal />
-    </div>
-  );
+// Halaman /admin/* hanya bisa diakses setelah login.
+const RequireAdmin: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { isAdmin } = useCMS();
+  const location = useLocation();
+  if (!isAdmin) return <Navigate to="/admin/login" replace state={{ from: location.pathname }} />;
+  return <>{children}</>;
 };
 
 export default function App() {
   return (
     <CMSProvider>
-      <MainAppContent />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/admin/login" element={<LoginPage />} />
+          <Route
+            path="/admin"
+            element={
+              <RequireAdmin>
+                <AdminLayout />
+              </RequireAdmin>
+            }
+          >
+            <Route index element={<DashboardPage />} />
+            <Route path="penawaran" element={<QuotationsPage />} />
+            <Route path="layanan" element={<ServicesPage />} />
+            <Route path="portofolio" element={<PortfolioPage />} />
+            <Route path="testimoni" element={<TestimonialsPage />} />
+            <Route path="perusahaan" element={<CompanyPage />} />
+            <Route path="backup" element={<BackupPage />} />
+          </Route>
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </BrowserRouter>
     </CMSProvider>
   );
 }

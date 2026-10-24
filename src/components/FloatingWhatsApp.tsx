@@ -4,8 +4,6 @@ import {
   MessageSquare, 
   X, 
   Send, 
-  Check, 
-  Sparkles, 
   Zap, 
   Palette,
   FileCheck

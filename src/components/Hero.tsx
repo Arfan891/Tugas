@@ -7,10 +7,6 @@ import {
   Clock, 
   ShieldCheck, 
   ArrowRight, 
-  Palette, 
-  Shirt, 
-  Layout, 
-  Printer, 
   Eye
 } from 'lucide-react';
 import { createWhatsAppUrl } from '../utils/formatters';
