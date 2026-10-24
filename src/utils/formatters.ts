@@ -1,4 +1,4 @@
-import type { ServiceCategory, QuotationRequest } from '../types';
+import type { ServiceCategory, QuotationRequest, QuotationStatus } from '../types';
 
 export const formatRupiah = (amount: number): string => {
   return new Intl.NumberFormat('id-ID', {
@@ -105,4 +105,29 @@ Saya tertarik dan ingin berkonsultasi mengenai layanan:
 👉 *${serviceTitle}* (${getCategoryLabel(category)})
 
 Mohon info spesifikasi bahan yang direkomendasikan, estimasi biaya, dan lama pengerjaannya. Terima kasih!`;
+};
+
+export const SERVICE_CATEGORIES: ServiceCategory[] = [
+  'digital-printing',
+  'sablon',
+  'textile-printing',
+  'desain-grafis',
+  'layout',
+  'percetakan-umum',
+];
+
+export const QUOTATION_STATUS_LABELS: Record<QuotationStatus, string> = {
+  pending: 'Menunggu',
+  contacted: 'Dihubungi',
+  approved: 'Disetujui',
+  completed: 'Selesai',
+  cancelled: 'Dibatalkan',
+};
+
+export const QUOTATION_STATUS_STYLES: Record<QuotationStatus, string> = {
+  pending: 'bg-amber-50 text-amber-700 border-amber-200',
+  contacted: 'bg-blue-50 text-blue-700 border-blue-200',
+  approved: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+  completed: 'bg-slate-100 text-slate-700 border-slate-300',
+  cancelled: 'bg-rose-50 text-rose-700 border-rose-200',
 };

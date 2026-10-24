@@ -1,14 +1,12 @@
 import React, { useState, useMemo } from 'react';
 import { useCMS } from '../context/CMSContext';
-import type { ServiceItem, ServiceCategory } from '../types';
+import type { ServiceItem } from '../types';
 import { 
   Search, 
   Sparkles, 
-  ArrowRight, 
   MessageSquare, 
   Check, 
   Clock, 
-  Layers, 
   Package, 
   Info, 
   X,

@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { useCMS } from '../context/CMSContext';
-import type { PortfolioItem, ServiceCategory } from '../types';
+import type { PortfolioItem } from '../types';
 import { 
   Sparkles, 
   Eye, 
   Calendar, 
   Building2, 
-  Tag, 
   X, 
   MessageSquare, 
   ArrowUpRight,

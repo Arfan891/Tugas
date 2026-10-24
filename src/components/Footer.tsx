@@ -1,24 +1,18 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useCMS } from '../context/CMSContext';
 import { 
   Printer, 
   MapPin, 
   Phone, 
   Mail, 
-  Clock, 
   ShieldCheck, 
-  FileText, 
-  MessageSquare,
   ArrowUp
 } from 'lucide-react';
 import { createWhatsAppUrl } from '../utils/formatters';
 
-interface FooterProps {
-  onOpenAdminLogin: () => void;
-}
-
-export const Footer: React.FC<FooterProps> = ({ onOpenAdminLogin }) => {
-  const { data, isAdmin, openAdminModal, openRfqModal } = useCMS();
+export const Footer: React.FC = () => {
+  const { data, isAdmin, openRfqModal } = useCMS();
   const { companyInfo } = data;
 
   const scrollToTop = () => {
@@ -171,21 +165,21 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAdminLogin }) => {
             <div className="pt-4 border-t border-slate-800/80">
               <p className="text-[11px] text-slate-500 mb-2">Akses Pengelola Konten:</p>
               {isAdmin ? (
-                <button
-                  onClick={openAdminModal}
+                <Link
+                  to="/admin"
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-950/80 text-emerald-300 border border-emerald-800 text-xs font-semibold hover:bg-emerald-900 transition-colors cursor-pointer"
                 >
                   <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
                   <span>Buka CMS Admin Panel</span>
-                </button>
+                </Link>
               ) : (
-                <button
-                  onClick={onOpenAdminLogin}
+                <Link
+                  to="/admin/login"
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 text-slate-400 border border-slate-800 text-xs font-medium hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
                 >
                   <ShieldCheck className="w-3.5 h-3.5" />
                   <span>Login Pengelola Website (CMS)</span>
-                </button>
+                </Link>
               )}
             </div>
           </div>
